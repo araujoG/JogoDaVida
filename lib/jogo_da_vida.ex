@@ -12,15 +12,25 @@ defmodule JogoDaVida do
 		:world
 
 	"""
-	def hello do
-	:world
+	def statusTeste do
+		status = "Vivo"
+		IO.puts("#{status} => #{Celula.mudancaDeEstado(status, ["Vivo", "Vivo", "Vivo", "Morto"])}")
+		IO.puts("#{status} => #{Celula.mudancaDeEstado(status, ["Vivo", "Vivo", "Vivo", "Vivo", "Morto"])}")
+		IO.puts("#{status} => #{Celula.mudancaDeEstado(status, ["Morto", "Morto", "Vivo", "Morto"])}")
+		IO.puts("#{status} => #{Celula.mudancaDeEstado(status, ["Morto", "Zumbi", "Vivo", "Morto"])}")
+		status = "Morto"
+		IO.puts("#{status} => #{Celula.mudancaDeEstado(status, ["Vivo", "Vivo", "Vivo", "Morto"])}")
+		IO.puts("#{status} => #{Celula.mudancaDeEstado(status, ["Morto", "Morto", "Vivo", "Morto"])}")
+		status = "Zumbi"
+		IO.puts("#{status} => #{Celula.mudancaDeEstado(status, ["Morto", "Morto", "Vivo", "Morto"])}")
+		IO.puts("#{status} => #{Celula.mudancaDeEstado(status, ["Morto", "Morto", "Zumbi", "Morto"])}")
 	end
 end
 
 defmodule Celula do
 	# Mudança de estado
 	def mudancaDeEstado("Vivo", vizinhos) do
-		IO.puts(vizinhos)
+		IO.puts("Vizinhos: #{vizinhos}")
 		if(vizinhos |> temZumbi?) do
 			"Zumbi"
 		else
@@ -32,7 +42,7 @@ defmodule Celula do
 		end
 	end
 	def mudancaDeEstado("Zumbi", vizinhos) do
-		IO.puts(vizinhos)
+		IO.puts("Vizinhos: #{vizinhos}")
 		if(vizinhos |> continuaZumbi?) do
 			"Zumbi"
 		else
@@ -40,7 +50,7 @@ defmodule Celula do
 		end
 	end
 	def mudancaDeEstado("Morto", vizinhos) do
-		IO.puts(vizinhos)
+		IO.puts("Vizinhos: #{vizinhos}")
 		if(vizinhos |> continuaMorto?) do
 			"Morto"
 		else
@@ -134,15 +144,4 @@ defmodule Celula do
 		end
 	end
 end
-
-status = "Vivo"
-IO.puts("#{status} => #{Celula.mudancaDeEstado("Vivo", ["Vivo", "Vivo", "Vivo", "Morto"])}")
-IO.puts("#{status} => #{Celula.mudancaDeEstado("Vivo", ["Vivo", "Vivo", "Vivo", "Vivo", "Morto"])}")
-IO.puts("#{status} => #{Celula.mudancaDeEstado("Vivo", ["Morto", "Morto", "Vivo", "Morto"])}")
-IO.puts("#{status} => #{Celula.mudancaDeEstado("Vivo", ["Morto", "Zumbi", "Vivo", "Morto"])}")
-status = "Morto"
-IO.puts("#{status} => #{Celula.mudancaDeEstado("Morto", ["Vivo", "Vivo", "Vivo", "Morto"])}")
-IO.puts("#{status} => #{Celula.mudancaDeEstado("Morto", ["Morto", "Morto", "Vivo", "Morto"])}")
-status = "Zumbi"
-IO.puts("#{status} => #{Celula.mudancaDeEstado("Zumbi", ["Morto", "Morto", "Vivo", "Morto"])}")
-IO.puts("#{status} => #{Celula.mudancaDeEstado("Zumbi", ["Morto", "Morto", "Zumbi", "Morto"])}")
+JogoDaVida.statusTeste()

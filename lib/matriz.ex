@@ -13,9 +13,6 @@ defmodule Matriz do
 		:world
 
 	"""
-	def teste do
-		:binary.bin_to_list "Ø"
-	end
 
 	def inicializa(nome) do
 		input = File.read!(nome)
@@ -39,6 +36,8 @@ defmodule Matriz do
 		IO.inspect listaAdjacentes(matrizFormatada, 2,0)
 		IO.inspect listaAdjacentes(matrizFormatada, 2,1)
 		IO.inspect listaAdjacentes(matrizFormatada, 2,2)
+
+		percorreMatriz(matrizFormatada, 0,0, n)
 
 
 	end
@@ -86,6 +85,17 @@ defmodule Matriz do
 			List.insert_at(lista, -1, get(matriz, i , j))
 		else
 			lista
+		end
+	end
+
+	def percorreMatriz(matriz, i, j, n) do
+		IO.inspect get(matriz, i, j)
+		if ((j+1)<n) do percorreMatriz(matriz, i, j+1, n)
+		else
+			if ((i+1)<n) do percorreMatriz(matriz, i+1, 0, n)
+			else
+				IO.inspect "Cabou :)"
+			end
 		end
 	end
 end

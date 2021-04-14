@@ -20,45 +20,42 @@ defmodule Matriz do
 	def inicializa(nome) do
 		input = File.read!(nome)
 		matriz = String.split(input, "\r\n")
-		n = listSize(matriz,0)
+		n = Enum.count(matriz)
+		IO.inspect n
 		matrizFormatada = populaMatriz(matriz, [])
 		IO.inspect matrizFormatada
-		IO.inspect get(matrizFormatada, 0, 0, n)
-		IO.inspect get(matrizFormatada, 1, 1, n)
-		IO.inspect get(matrizFormatada, 2, 2, n)
+		IO.inspect get(matrizFormatada, 0, 0)
+		IO.inspect get(matrizFormatada, 1, 1)
+		IO.inspect get(matrizFormatada, 2, 2)
+
+		printaMatriz(matrizFormatada)
 
 	end
 
-	def listSize([], n) do
-		n
-	end
-
-	def listSize([_head|body], n) do
-		listSize(body, n+1)
-	end
-
-	def findAt([head|body],0) do
-		head
-	end
-
-	def findAt([head|body], i) do
-		findAt(body, i-1)
-	end
 
 	def populaMatriz([], matriz) do
 		matriz
 	end
 
 	def populaMatriz([head|tail], matriz) do
-		populaMatriz(tail, matriz ++ String.split(head, " "))
+		populaMatriz(tail, List.insert_at(matriz, -1, String.split(head, " ")))
 	end
 
-	def get(matriz, i,j, n) do
-		index = i*n + j
-		IO.inspect matriz
-		IO.inspect index
-		findAt(matriz, index)
+	def get(matriz, i,j) do
+		{ret, _lixo} = List.pop_at(matriz, i)
+		{ret, _lixo} = List.pop_at(ret, j)
+		ret
 	end
+
+	def printaMatriz([]) do
+	end
+
+	def printaMatriz([head|body]) do
+		IO.inspect head
+		printaMatriz(body)
+	end
+
+
 end
 
 Matriz.inicializa("arquivo.txt")

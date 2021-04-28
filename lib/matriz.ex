@@ -39,6 +39,8 @@ defmodule Matriz do
 
 		percorreMatriz(matrizFormatada, 0,0, n)
 
+		iteracaoPrincipal(matrizFormatada,n, 0, 3)
+
 
 	end
 
@@ -89,12 +91,42 @@ defmodule Matriz do
 	end
 
 	def percorreMatriz(matriz, i, j, n) do
-		IO.inspect get(matriz, i, j)
+		{linhaAtual, _lixo} = List.pop_at(matriz, i)
+		linhaAtual = List.update_at(linhaAtual, j, &(&1 = 0))
+		matriz = List.update_at(matriz,i, &(&1 = linhaAtual))
 		if ((j+1)<n) do percorreMatriz(matriz, i, j+1, n)
 		else
 			if ((i+1)<n) do percorreMatriz(matriz, i+1, 0, n)
 			else
-				IO.inspect "Cabou :)"
+				matriz
+			end
+		end
+	end
+
+	def verificaIgualdadeMatriz(matriz,matrizNova, i, j, n) do
+		if (get(matriz,i,j) != get(matrizNova,i,j)) do false
+		else
+			if ((j+1)<n) do verificaIgualdadeMatriz(matriz, matrizNova, i, j+1, n)
+			else
+				if ((i+1)<n) do verificaIgualdadeMatriz(matriz, matrizNova, i+1, 0, n)
+				else
+					true
+				end
+			end
+		end
+	end
+
+	def iteracaoPrincipal(matriz, n, iteracoes, iteracoesPrevistas) do
+		if(iteracoes >= iteracoesPrevistas) do 
+			IO.inspect ("O sistema Parou depois de #{iteracoes} iteracoes, com a matriz final:")
+			IO.inspect (matriz)
+		else
+			matrizNova = percorreMatriz(matriz,0,0,n)
+			if (verificaIgualdadeMatriz(matriz, matrizNova,0,0,n)) do
+				IO.inspect ("O sistema estabilizou depois de #{iteracoes} iteracoes, com a matriz final:")
+				IO.inspect(matrizNova)
+			else
+				iteracaoPrincipal(matrizNova, n, iteracoes+1, iteracoesPrevistas)
 			end
 		end
 	end

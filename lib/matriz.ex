@@ -1,5 +1,3 @@
-import Celula, only: [mudancaDeEstado: 2]
-
 defmodule Matriz do
 
 	@compile :nowarn_unused_vars
@@ -24,8 +22,8 @@ defmodule Matriz do
 
 		n = Enum.count(matriz)
 		matrizFormatada = populaMatriz(matriz, [])
-		printaMatriz(matrizFormatada)
-    IO.inspect("-----------------------------")
+    IO.inspect("Sistema inicializado, iteracao 0, matriz atual:")
+    printaMatriz(matrizFormatada)
     #IO.inspect formaLinha([],matrizFormatada, 0, 2)
     #IO.inspect formaLinha([],matrizFormatada, 1, 2)
     #IO.inspect formaLinha([],matrizFormatada, 2, 2)
@@ -44,8 +42,6 @@ defmodule Matriz do
 		#IO.inspect percorreMatriz([],matrizFormatada, 0,0, n)
 
 		iteracaoPrincipal(matrizFormatada,n, 1, iteracoes)
-
-
 	end
 
   def populaMatriz([head|tail]) do
@@ -109,7 +105,7 @@ defmodule Matriz do
 
 
 
-	def percorreMatriz(matrizNova,matriz, i, j, n) do
+	def percorreMatriz(matrizNova,matriz, i, _j, n) do
 		linhaAtualizada = formaLinha([], matriz, i, n-1)
 		matrizNova = List.insert_at(matrizNova, -1, linhaAtualizada)
 		if ((i+1)<n) do percorreMatriz(matrizNova, matriz, i+1, 0, n)
@@ -132,25 +128,19 @@ defmodule Matriz do
 	end
 
 	def iteracaoPrincipal(matriz, n, iteracoes, iteracoesPrevistas) do
-	 	if(iteracoes >= iteracoesPrevistas) do
-	 		IO.inspect ("O sistema Parou depois de #{iteracoes} iteracoes, com a matriz final:")
-	 		IO.inspect (matriz)
+	 	if(iteracoes > iteracoesPrevistas) do
+	 		IO.inspect ("O sistema Parou depois de #{iteracoes-1} iteracoes, com a matriz final:")
+	 		printaMatriz(matriz)
 	 	else
 	 		matrizNova = percorreMatriz([], matriz,0,0,n)
 	 		if verificaIgualdadeMatriz(matriz, matrizNova, 0,0,n) do
-	 			IO.inspect ("O sistema estabilizou depois de #{iteracoes} iteracoes, com a matriz final:")
-	 			IO.inspect(matrizNova)
+	 			IO.inspect ("O sistema estabilizou depois de #{iteracoes-1} iteracoes, com a matriz final:")
+	 			printaMatriz(matrizNova)
 	 		else
 				IO.inspect("Sistema ainda em execucao, iteracao #{iteracoes}, matriz atual:")
-				IO.inspect(matrizNova)
+				printaMatriz(matrizNova)
 	 			iteracaoPrincipal(matrizNova, n, iteracoes+1, iteracoesPrevistas)
 	 		end
 	 	end
 	 end
 end
-nomeDoArquivo = IO.gets "Bem vindo ao jogo da vida, digite o nome do arquivo:\n"
-nomeDoArquivo = String.replace(nomeDoArquivo, "\n", "")
-iteracoes = IO.gets "Agora digite o numero de iteracoes desejadas:\n"
-
-
-Matriz.inicializa(nomeDoArquivo, iteracoes)

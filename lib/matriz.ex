@@ -17,7 +17,7 @@ defmodule Matriz do
 
 	"""
 
-	def inicializa(nome) do
+	def inicializa(nome, iteracoes) do
 		input = File.read!(nome)
 		input = String.replace(input, "\r", "")
 		matriz = String.split(input, "\n")
@@ -43,7 +43,7 @@ defmodule Matriz do
 
 		#IO.inspect percorreMatriz([],matrizFormatada, 0,0, n)
 
-		iteracaoPrincipal(matrizFormatada,n, 1, 6)
+		iteracaoPrincipal(matrizFormatada,n, 1, iteracoes)
 
 
 	end
@@ -141,11 +141,16 @@ defmodule Matriz do
 	 			IO.inspect ("O sistema estabilizou depois de #{iteracoes} iteracoes, com a matriz final:")
 	 			IO.inspect(matrizNova)
 	 		else
-				IO.inspect("Sistema ainda em execução, iteração #{iteracoes}, matriz atual:")
+				IO.inspect("Sistema ainda em execucao, iteracao #{iteracoes}, matriz atual:")
 				IO.inspect(matrizNova)
 	 			iteracaoPrincipal(matrizNova, n, iteracoes+1, iteracoesPrevistas)
 	 		end
 	 	end
 	 end
 end
-Matriz.inicializa("arquivo.txt")
+nomeDoArquivo = IO.gets "Bem vindo ao jogo da vida, digite o nome do arquivo:\n"
+nomeDoArquivo = String.replace(nomeDoArquivo, "\n", "")
+iteracoes = IO.gets "Agora digite o numero de iteracoes desejadas:\n"
+
+
+Matriz.inicializa(nomeDoArquivo, iteracoes)

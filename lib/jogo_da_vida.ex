@@ -7,7 +7,7 @@ defmodule JogoDaVida do
 	Hello world.
 	"""
   def main do
-    nomeDoArquivo = "arquivo.txt"
+    nomeDoArquivo = "arquivo1.txt"
     iteracoes = 11
     Matriz.inicializa(nomeDoArquivo, iteracoes)
   end
@@ -26,9 +26,6 @@ defmodule JogoDaVida do
 		IO.puts("#{status} => #{Celula.mudancaDeEstado(status, ["Morto", "Morto", "Zumbi", "Morto"])}")
 	end
 end
-
-
-
 
 defmodule Celula do
 	# Mudança de estado
@@ -156,15 +153,16 @@ defmodule Celula do
 end
 # JogoDaVida.statusTeste()
 
-
 defmodule Matriz do
 	def inicializa(nome, iteracoes) do
 		input = File.read!(nome)
 		input = String.replace(input, "\r", "")
 		matriz = String.split(input, "\n")
 
-		n = Enum.count(matriz)
 		matrizFormatada = populaMatriz(matriz, [])
+    m = Enum.count(matrizFormatada) #Número de linhas
+		n = Enum.count(List.first(matrizFormatada)) #Número de colunas
+    IO.puts "M = #{m}  ||  N = #{n}"
     IO.inspect("Sistema inicializado, iteracao 0, matriz atual:")
     printaMatriz(matrizFormatada)
     #IO.inspect formaLinha([],matrizFormatada, 0, 2)
@@ -184,7 +182,7 @@ defmodule Matriz do
 
 		#IO.inspect percorreMatriz([],matrizFormatada, 0,0, n)
 
-		iteracaoPrincipal(matrizFormatada,n, 1, iteracoes)
+		iteracaoPrincipal(matrizFormatada, m, n, 1, iteracoes)
 	end
 
   def populaMatriz([head|tail]) do
@@ -214,21 +212,21 @@ defmodule Matriz do
 	end
 
   def listaAdjacentes(matriz, i, j) do
-    listaAdjacentes(matriz, i, j, Enum.count(matriz))
+    listaAdjacentes(matriz, i, j, Enum.count(matriz), Enum.count(List.first(matriz)))
   end
-	def listaAdjacentes(matriz, i, j, n) do
-		[] |> adicaoParcial(matriz, i-1, j-1, n)
-		|> adicaoParcial(matriz, i-1, j, n)
-		|> adicaoParcial(matriz, i-1, j+1, n)
-		|> adicaoParcial(matriz, i, j-1, n)
-		|> adicaoParcial(matriz, i, j+1, n)
-		|> adicaoParcial(matriz, i+1, j-1, n)
-		|> adicaoParcial(matriz, i+1, j, n)
-		|> adicaoParcial(matriz, i+1, j+1, n)
+	def listaAdjacentes(matriz, i, j, m, n) do
+		[] |> adicaoParcial(matriz, i-1, j-1, m, n)
+		|> adicaoParcial(matriz, i-1, j, m, n)
+		|> adicaoParcial(matriz, i-1, j+1, m, n)
+		|> adicaoParcial(matriz, i, j-1, m, n)
+		|> adicaoParcial(matriz, i, j+1, m, n)
+		|> adicaoParcial(matriz, i+1, j-1, m, n)
+		|> adicaoParcial(matriz, i+1, j, m, n)
+		|> adicaoParcial(matriz, i+1, j+1, m, n)
 	end
 
-	def adicaoParcial(lista, matriz, i, j, n) do
-		if(i>=0 && (i+1)<=n && j>=0 && (j+1)<=n) do
+	def adicaoParcial(lista, matriz, i, j, m, n) do
+		if(i>=0 && (i+1)<=m && j>=0 && (j+1)<=n) do
 			List.insert_at(lista, -1, get(matriz, i , j))
 		else
 			lista
@@ -236,33 +234,34 @@ defmodule Matriz do
 	end
 
   def formaLinha(novaLinha, matriz, i, j) when j == 0 do
+    # IO.puts ">>i=#{i} j=#{j}"
     elemento = get(matriz,i,j)
     [Celula.mudancaDeEstado(elemento, listaAdjacentes(matriz,i,j)) | novaLinha]
   end
 
   def formaLinha(novaLinha, matriz, i, j) do
+    # IO.puts ">>i=#{i} j=#{j}"
 		elemento = get(matriz,i,j)
     [Celula.mudancaDeEstado(elemento, listaAdjacentes(matriz,i,j)) | novaLinha] |>
     formaLinha(matriz, i, j-1)
   end
 
-
-
-	def percorreMatriz(matrizNova,matriz, i, _j, n) do
+	def percorreMatriz(matrizNova,matriz, i, _j, m, n) do
+    # IO.puts "i=#{i} j=#{j} n=#{n}"
 		linhaAtualizada = formaLinha([], matriz, i, n-1)
 		matrizNova = List.insert_at(matrizNova, -1, linhaAtualizada)
-		if ((i+1)<n) do percorreMatriz(matrizNova, matriz, i+1, 0, n)
+		if ((i+1)<m) do percorreMatriz(matrizNova, matriz, i+1, 0, m, n)
 			else
 				matrizNova
 			end
 	end
 
-	def verificaIgualdadeMatriz(matriz,matrizNova, i, j, n) do #Pode só usar o ==
+	def verificaIgualdadeMatriz(matriz,matrizNova, i, j, m, n) do #Pode só usar o ==
 		if (get(matriz,i,j) != get(matrizNova,i,j)) do false
 		else
-			if ((j+1)<n) do verificaIgualdadeMatriz(matriz, matrizNova, i, j+1, n)
+			if ((j+1)<n) do verificaIgualdadeMatriz(matriz, matrizNova, i, j+1, m, n)
 			else
-				if ((i+1)<n) do verificaIgualdadeMatriz(matriz, matrizNova, i+1, 0, n)
+				if ((i+1)<m) do verificaIgualdadeMatriz(matriz, matrizNova, i+1, 0, m, n)
 				else
 					true
 				end
@@ -270,19 +269,19 @@ defmodule Matriz do
 		end
 	end
 
-	def iteracaoPrincipal(matriz, n, iteracoes, iteracoesPrevistas) do
+	def iteracaoPrincipal(matriz, m, n, iteracoes, iteracoesPrevistas) do
 	 	if(iteracoes > iteracoesPrevistas) do
 	 		IO.inspect ("O sistema Parou depois de #{iteracoes-1} iteracoes, com a matriz final:")
 	 		printaMatriz(matriz)
 	 	else
-	 		matrizNova = percorreMatriz([], matriz,0,0,n)
-	 		if verificaIgualdadeMatriz(matriz, matrizNova, 0,0,n) do
+	 		matrizNova = percorreMatriz([], matriz, 0, 0, m, n)
+	 		if verificaIgualdadeMatriz(matriz, matrizNova, 0, 0, m, n) do
 	 			IO.inspect ("O sistema estabilizou depois de #{iteracoes-1} iteracoes, com a matriz final:")
 	 			printaMatriz(matrizNova)
 	 		else
 				IO.inspect("Sistema ainda em execucao, iteracao #{iteracoes}, matriz atual:")
 				printaMatriz(matrizNova)
-	 			iteracaoPrincipal(matrizNova, n, iteracoes+1, iteracoesPrevistas)
+	 			iteracaoPrincipal(matrizNova, m, n, iteracoes+1, iteracoesPrevistas)
 	 		end
 	 	end
 	 end

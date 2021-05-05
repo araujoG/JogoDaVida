@@ -7,9 +7,17 @@ defmodule JogoDaVida do
 	Hello world.
 	"""
   def main do
-    nomeDoArquivo = "arquivo1.txt"
-    iteracoes = 11
+    nomeDoArquivo = inputString("Digite o nome do arquivo de entrada: ")
+    iteracoes = inputInteiro("Digite o número de iterações: ")
     Matriz.inicializa(nomeDoArquivo, iteracoes)
+  end
+
+  def inputInteiro(msg) do
+    msg |> IO.gets |> String.trim |> String.to_integer
+  end
+
+  def inputString(msg) do
+    msg |> IO.gets |> String.trim
   end
 
 	def statusTeste do

@@ -8,7 +8,7 @@ defmodule JogoDaVida do
 	"""
   def main do
     nomeDoArquivo = inputString("Digite o nome do arquivo de entrada: ")
-    iteracoes = inputInteiro("Digite o número de iterações: ")
+    iteracoes = inputInteiro("Digite o numero de iteracoes: ")
     Matriz.inicializa(nomeDoArquivo, iteracoes)
   end
 

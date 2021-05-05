@@ -60,6 +60,9 @@ defmodule Celula do
 			"Vivo"
 		end
 	end
+	def mudancaDeEstado(lixo, vizinhos) do
+		lixo
+	end
 
 	# Continua zumbi?
 	def continuaZumbi?([]) do
